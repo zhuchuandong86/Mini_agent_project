@@ -1,1 +1,20 @@
+from langchain_core.tools import tool
 
+# 提示：真实的 MCP 开发中，我们会使用 `mcp` 官方 SDK 连接外部 Server (stdio/sse)。
+# 框架会自动将 Server 提供的能力转换成如下的 @tool。
+# 这里我们显式写出，代表这是从 MCP Server 动态获取的能力。
+
+@tool
+def mcp_write_file(filename: str, content: str) -> str:
+    """
+    [MCP Tool] 将内容写入本地文件。
+    参数 filename: 文件名（如 report.txt）
+    参数 content: 要写入的具体内容
+    """
+    print(f"\n[MCP Execution] 正在通过标准协议将内容写入 {filename}...")
+    try:
+        with open(filename, 'w', encoding='utf-8') as f:
+            f.write(content)
+        return f"成功写入文件: {filename}"
+    except Exception as e:
+        return f"写入失败: {str(e)}"
